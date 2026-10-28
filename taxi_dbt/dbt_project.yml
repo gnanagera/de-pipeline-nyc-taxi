@@ -1,0 +1,10 @@
+name: taxi_dbt
+version: "1.0.0"
+profile: taxi_dbt
+model-paths: ["models"]
+models:
+  taxi_dbt:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

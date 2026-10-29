@@ -1,3 +1,11 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='trip_id',
+        incremental_strategy='merge'
+    )
+}}
+
 select
     trip_id,
     pickup_date,
@@ -17,3 +25,7 @@ select
     case when fare_amount > 0
          then round(tip_amount / fare_amount, 4) end      as tip_pct
 from {{ ref('stg_taxi_trips') }}
+
+{% if is_incremental() %}
+where pickup_date >= (select max(pickup_date) from {{ this }})
+{% endif %}
